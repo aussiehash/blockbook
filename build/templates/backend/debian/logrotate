@@ -1,0 +1,12 @@
+{{define "main" -}}
+{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/testnet3/debug.log
+{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/testnet3/db.log
+{
+        rotate 7
+        daily
+        compress
+        missingok
+        notifempty
+        copytruncate
+}
+{{end}}

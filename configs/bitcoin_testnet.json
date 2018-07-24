@@ -1,42 +1,53 @@
 {
-  "coin_name": "Testnet",
-  "coin_shortcut": "TEST",
-  "coin_folder": "bitcoin_testnet",
+  "coin": {
+      "name": "Testnet",
+      "shortcut": "TEST",
+      "alias": "bitcoin_testnet"
+  },
   "ports": {
-    "backendRPC": 18030,
-    "backendMessageQueue": 48330,
-    "blockbookInternal": 19030,
-    "blockbookPublic": 19130
+    "backend_rpc": 18030,
+    "backend_message_queue": 48330,
+    "blockbook_internal": 19030,
+    "blockbook_public": 19130
   },
   "rpc": {
-    "rpcURLTemplate": "http://localhost:{{.ports.backendRPC}}",
-    "rpcUser": "rpc",
-    "rpcPass": "rpc",
-    "rpcTimeout": 25,
+    "rpc_url_template": "http://localhost:{{.Ports.BackendRPC}}",
+    "rpc_user": "rpc",
+    "rpc_pass": "rpc",
+    "rpc_timeout": 25,
     "parse": true,
-    "messageQueueBindingTemplate": "tcp://127.0.0.1:{{.ports.backendMessageQueue}}",
-    "mempoolWorkers": 8,
-    "mempoolSubWorkers": 2,
-    "blockAddressesToKeep": 300
+    "message_queue_binding_template": "tcp://127.0.0.1:{{.Ports.BackendMessageQueue}}",
+    "mempool_workers": 8,
+    "mempool_sub_workers": 2,
+    "block_addresses_to_keep": 300
   },
   "backend": {
     "package_name": "backend-bitcoin-testnet",
+    "package_revision": "satoshilabs-1",
+    "package_maintainer": "Jakub Matys",
+    "package_maintainer_email": "jakub.matys@satoshilabs.com",
     "system_user": "bitcoin",
     "version": "0.16.1",
-    "binaryURL": "https://bitcoin.org/bin/bitcoin-core-0.16.1/bitcoin-0.16.1-x86_64-linux-gnu.tar.gz",
-    "verificationType": "asc/sha256/...",
-    "verificationSourceURL": "https://bitcoin.org/bin/bitcoin-core-0.16.1/SHA256SUMS.asc",
-    "verificationSignature": "eccf8b61ba0549f6839e586c7dc6fc4bf6d7591ac432aaea8a7df0266b113d27",
-    "executableTemplate": "{{.env.BackendInstallPath}}/bin/bitcoind -datadir={{.env.BackendDataPath}}/{{.coin.coin_folder}}/backend -conf={{.env.BackendInstallPath}}/{{.coin.coin_folder}}/{{.coin.coin_folder}}.conf -pid=/run/{{.coin.coin_folder}}/{{.coin.coin_folder}}.pid",
-    "postinstScriptTemplate": "HOME=/opt/coins/data/{{.coin.coin_folder}}/backend /opt/coins/nodes/zcash_testnet/bin/zcash-fetch-params --testnet",
-    "serviceType": "forking/simple",
-    "hardeningMemory": true,
-    "coin_specific_config_template reminder": null
+    "binary_url": "https://bitcoin.org/bin/bitcoin-core-0.16.1/bitcoin-0.16.1-x86_64-linux-gnu.tar.gz",
+    "verification_type": "gpg-sha256",
+    "verification_source": "https://bitcoin.org/bin/bitcoin-core-0.16.1/SHA256SUMS.asc",
+    "exclude_files": [
+        "bin/bitcoin-qt"
+    ],
+    "exec_command_template": "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/bin/bitcoind -datadir={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf -pid=/run/{{.Coin.Alias}}/{{.Coin.Alias}}.pid",
+    "postinst_script_template": "HOME={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/backend {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/bin/zcash-fetch-params --testnet",
+    "service_type": "forking",
+    "protect_memory": true,
+    "mainnet": false,
+    "config_file": "bitcoin.conf",
+    "additional_params": {
+        "deprecatedrpc": "estimatefee"
+    }
   },
   "blockbook": {
     "package_name": "blockbook-bitcoin-testnet",
     "system_user": "blockbook-bitcoin",
     "explorer": "/explorer",
-    "additional_params": "-resyncindexperiod=30011 -resyncmempoolperiod=2011",
+    "additional_params": "-resyncindexperiod=30011 -resyncmempoolperiod=2011"
   }
 }
